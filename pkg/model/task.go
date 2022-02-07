@@ -1,7 +1,7 @@
 package model
 
 const (
-	ETCDPATH = "/runner/job/%s"
+
 
 	Ready    = 0
 	Running  = 1

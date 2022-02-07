@@ -1,11 +1,29 @@
 package client
 
-import "simple-cicd/pkg/model"
-
-var (
-	TaskQueue *model.TaskQueue
+import (
+	clientv3 "go.etcd.io/etcd/client/v3"
+	"simple-cicd/config"
+	"time"
 )
 
-func Init() {
-	TaskQueue, _ = model.NewQueue()
+//
+//var (
+//	TaskQueue *model.TaskQueue
+//)
+//
+//func Init() {
+//	err :=
+//	if err != nil {
+//		return
+//	}
+//}
+
+func NewEtcdClient() (*clientv3.Client, error) {
+	conf := config.C.EtcdConfig
+	return clientv3.New(clientv3.Config{
+		Endpoints:   conf.Endpoints,
+		DialTimeout: time.Second,
+		Username:    conf.Username,
+		Password:    conf.Password,
+	})
 }
