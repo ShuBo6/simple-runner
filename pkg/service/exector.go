@@ -3,12 +3,14 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/prometheus/common/log"
 	"os"
 	"os/exec"
 	"simple-cicd/pkg/model"
 )
 
-func exector(task *model.Task) {
+func Exec(task *model.Task) {
+	log.Debugf("[executor] task: %s starting.")
 	taskData := new(model.TaskData)
 	err := json.Unmarshal([]byte(task.Data), taskData)
 	if err != nil {
@@ -24,11 +26,12 @@ func exector(task *model.Task) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(string(output))
+	log.Debugf(string(output))
 	taskData.Stdout = string(output)
 	taskDataMarshal, err := json.Marshal(taskData)
 	if err != nil {
 		return
 	}
 	task.Data = string(taskDataMarshal)
+	log.Debugf("[executor] task: %s finished.")
 }

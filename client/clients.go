@@ -3,20 +3,19 @@ package client
 import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"simple-cicd/config"
+	"simple-cicd/pkg/model"
 	"time"
 )
 
 //
-//var (
-//	TaskQueue *model.TaskQueue
-//)
+var (
+	TaskChan chan *model.Task
+)
+
 //
-//func Init() {
-//	err :=
-//	if err != nil {
-//		return
-//	}
-//}
+func Init() {
+	TaskChan = make(chan *model.Task, 999)
+}
 
 func NewEtcdClient() (*clientv3.Client, error) {
 	conf := config.C.EtcdConfig
