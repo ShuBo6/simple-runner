@@ -10,6 +10,6 @@ var defaultRouter *gin.Engine
 func Init() {
 	defaultRouter = gin.Default()
 	defaultRouter.GET("/test", controller.Test)
-	defaultRouter.PUT("/task", controller.CreateTask)
+	defaultRouter.POST("/task", controller.CreateTask)
 	defaultRouter.Run("0.0.0.0:5080")
 }

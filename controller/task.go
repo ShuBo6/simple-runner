@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -33,7 +34,7 @@ func CreateTask(ctx *gin.Context) {
 		return
 	}
 	task.Id = fmt.Sprintf("%d", time.Now().Unix())
-	err = queue.GetTaskQueue().Add(ctx, task)
+	err = queue.GetTaskQueue().Add(context.Background(), task)
 	if err != nil {
 		ctx.JSON(http.StatusOK, map[string]string{
 			"message": "create task failed.",

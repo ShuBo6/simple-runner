@@ -1,21 +1,19 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/common/log"
 	"github.com/sirupsen/logrus"
-	"os"
-	"os/signal"
 	"simple-cicd/client"
 	"simple-cicd/config"
 	"simple-cicd/pkg/queue"
-	"simple-cicd/pkg/service"
 	"simple-cicd/router"
-	"sync"
-	"syscall"
+	"testing"
 )
 
-func main() {
+func TestName(t *testing.T) {
 
 	client.Init()
 	err := config.Load("conf/config.yaml")
@@ -28,19 +26,12 @@ func main() {
 		log.Errorf("InitEtcdQueue failed.err:%s", err.Error())
 		return
 	}
+	router.Init()
 	gin.SetMode(gin.DebugMode)
 	logrus.SetLevel(logrus.TraceLevel)
-	//router.Init()
-	wg := &sync.WaitGroup{}
-	service.EtcdHandler(wg)
-	service.Run(wg)
-	router.Init()
-	wg.Wait()
-	go processSignal()
-}
-func processSignal() {
-	signalChan := make(chan os.Signal, 1)
-	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGTSTP)
-	sn := <-signalChan
-	logrus.Infof("exit server because signal %d", sn)
+	pop, err := queue.GetTaskQueue().Pop(context.Background(), "1644321561")
+	if err != nil {
+		return
+	}
+	fmt.Println(pop)
 }

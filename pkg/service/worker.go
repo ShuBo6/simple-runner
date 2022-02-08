@@ -1,9 +1,16 @@
 package service
 
-import "simple-cicd/client"
+import (
+	"github.com/prometheus/common/log"
+	"simple-cicd/client"
+	"sync"
+)
 
-func Run() {
+func Run(wg *sync.WaitGroup) {
 	go func() {
+		log.Debugf("[Run] start Run worker")
+		defer wg.Done()
+		wg.Add(1)
 		for {
 			select {
 			case task, ok := <-client.TaskChan:
@@ -13,6 +20,6 @@ func Run() {
 
 			}
 		}
-
 	}()
+
 }

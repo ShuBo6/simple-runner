@@ -1,11 +1,13 @@
 package service
 
 import (
+	"context"
 	"fmt"
 	"github.com/prometheus/common/log"
 	"os"
 	"os/exec"
 	"simple-cicd/pkg/model"
+	"simple-cicd/pkg/queue"
 )
 
 func Exec(task *model.Task) {
@@ -18,9 +20,16 @@ func Exec(task *model.Task) {
 
 	output, err := c.CombinedOutput()
 	if err != nil {
-		fmt.Println(err)
+		log.Errorf("[Exec] err:%+v", err.Error())
+		task.Status = 3
 	}
 	log.Debugf(string(output))
 	task.Data.Stdout = string(output)
+	task.Status = 2
+	err = queue.GetStartTaskQueue().Add(context.Background(), task)
+	if err != nil {
+		log.Errorf("[EtcdHandler] save StartTaskQueue failed,err:%+v", err)
+		return
+	}
 	log.Debugf("[executor] task: %s finished.")
 }
