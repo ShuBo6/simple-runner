@@ -42,7 +42,7 @@ func CreateTask(ctx *gin.Context) {
 		})
 		return
 	}
-	log.Debugf("[CreateTask] task:%+v", *task)
+	log.Infof("[CreateTask] task:%+v", *task)
 	ctx.JSON(http.StatusOK, map[string]string{
 		"message": "ok",
 		"err":     "",

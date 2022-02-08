@@ -8,7 +8,7 @@ import (
 
 func Run(wg *sync.WaitGroup) {
 	go func() {
-		log.Debugf("[Run] start Run worker")
+		log.Infof("[Run] start Run worker")
 		defer wg.Done()
 		wg.Add(1)
 		for {

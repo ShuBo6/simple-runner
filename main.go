@@ -30,6 +30,8 @@ func main() {
 	}
 	gin.SetMode(gin.DebugMode)
 	logrus.SetLevel(logrus.TraceLevel)
+	logrus.SetOutput(os.Stdout)
+	logrus.SetFormatter(&logrus.JSONFormatter{})
 	//router.Init()
 	wg := &sync.WaitGroup{}
 	service.EtcdHandler(wg)

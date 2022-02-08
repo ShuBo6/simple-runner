@@ -122,7 +122,7 @@ func (q *TaskQueue) Add(ctx context.Context, task *model.Task) error {
 		return err
 	}
 	key := q.RootPath + task.Id
-	log.Debugf("[Add Task into queue] key:%s,value:%+v", key, *task)
+	log.Infof("[Add Task into queue] key:%s,value:%+v", key, *task)
 	q.locker.Lock()
 	defer q.locker.Unlock()
 	if _, err = q.cli.Put(ctx, key, string(data)); err != nil {

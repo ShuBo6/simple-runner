@@ -13,7 +13,7 @@ func EtcdHandler(wg *sync.WaitGroup) {
 	go func() {
 		ctx := context.Background()
 		defer wg.Done()
-		log.Debugf("[EtcdHandler] start EtcdHandler")
+		log.Infof("[EtcdHandler] start EtcdHandler")
 		wg.Add(1)
 		for {
 			time.Sleep(2 * time.Second)
@@ -30,7 +30,7 @@ func EtcdHandler(wg *sync.WaitGroup) {
 					log.Errorf("[EtcdHandler] save StartTaskQueue failed,err:%+v", err)
 					return
 				}
-				log.Debugf("[EtcdHandler] get task:%+v", *task)
+				log.Infof("[EtcdHandler] get task:%+v", *task)
 				client.TaskChan <- task
 			}
 
