@@ -1,7 +1,9 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/prometheus/common/log"
+	"github.com/sirupsen/logrus"
 	"simple-cicd/client"
 	"simple-cicd/config"
 	"simple-cicd/pkg/queue"
@@ -23,6 +25,8 @@ func main() {
 		return
 	}
 	router.Init()
+	gin.SetMode(gin.DebugMode)
+	logrus.SetLevel(logrus.DebugLevel)
 	service.EtcdHandler()
 	service.Run()
 }

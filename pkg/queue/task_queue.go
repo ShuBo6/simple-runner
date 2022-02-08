@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/prometheus/common/log"
 	"github.com/sirupsen/logrus"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"simple-cicd/client"
@@ -80,7 +81,7 @@ func (q *TaskQueue) Add(ctx context.Context, task *model.Task) error {
 		return err
 	}
 	key := q.RootPath + task.Id
-	fmt.Println(key)
+	log.Debugf("[Add Task into queue] key:%s,value:%+v",key,*task)
 	q.locker.Lock()
 	defer q.locker.Unlock()
 	if _, err = q.cli.Put(ctx, key, string(data)); err != nil {
