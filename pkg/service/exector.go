@@ -34,5 +34,5 @@ func Exec(task *model.Task) {
 		log.Errorf("[EtcdHandler] save StartTaskQueue failed,err:%+v", err)
 		return
 	}
-	log.Infof("[executor] task: %s finished.")
+	log.Infof("[executor] task: %s finished.",task.Name)
 }
