@@ -26,7 +26,7 @@ func main() {
 	}
 	router.Init()
 	gin.SetMode(gin.DebugMode)
-	logrus.SetLevel(logrus.DebugLevel)
+	logrus.SetLevel(logrus.TraceLevel)
 	service.EtcdHandler()
 	service.Run()
 }
