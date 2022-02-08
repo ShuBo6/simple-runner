@@ -8,13 +8,13 @@ const (
 )
 
 type Task struct {
-	Id     string
-	Data   string
-	Name   string
-	Status int
+	Id     string   `json:"id"`
+	Data   TaskData `json:"data"`
+	Name   string   `json:"name"`
+	Status int      `json:"status"`
 }
 type TaskData struct {
-	Cmd    string
-	EnvMap map[string]string
-	Stdout string
+	Cmd    string            `json:"cmd"`
+	EnvMap map[string]string `json:"env_map"`
+	Stdout string            `json:"stdout"`
 }
