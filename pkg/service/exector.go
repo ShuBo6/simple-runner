@@ -1,7 +1,6 @@
 package service
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/prometheus/common/log"
 	"os"
@@ -11,14 +10,9 @@ import (
 
 func Exec(task *model.Task) {
 	log.Debugf("[executor] task: %s starting.")
-	taskData := new(model.TaskData)
-	err := json.Unmarshal([]byte(task.Data), taskData)
-	if err != nil {
-		return
-	}
-	c := exec.Command("/usr/bin/sh", "-c", "-e", taskData.Cmd)
+	c := exec.Command("/usr/bin/sh", "-c", "-e", task.Data.Cmd)
 	c.Env = os.Environ()
-	for k, v := range taskData.EnvMap {
+	for k, v := range task.Data.EnvMap {
 		c.Env = append(c.Env, fmt.Sprintf("%s=%s", k, v))
 	}
 
@@ -27,11 +21,6 @@ func Exec(task *model.Task) {
 		fmt.Println(err)
 	}
 	log.Debugf(string(output))
-	taskData.Stdout = string(output)
-	taskDataMarshal, err := json.Marshal(taskData)
-	if err != nil {
-		return
-	}
-	task.Data = string(taskDataMarshal)
+	task.Data.Stdout = string(output)
 	log.Debugf("[executor] task: %s finished.")
 }
