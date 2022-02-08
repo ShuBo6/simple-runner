@@ -12,8 +12,8 @@ import (
 
 func Exec(task *model.Task) {
 	log.Debugf("[executor] task: %s starting.")
-	//c := exec.Command("/usr/bin/sh", "-c", "-e", task.Data.Cmd)
-	c := exec.Command( task.Data.Cmd)
+	c := exec.Command("/bin/sh", "-c", "-e", task.Data.Cmd)
+	//c := exec.Command( task.Data.Cmd)
 	c.Env = os.Environ()
 	for k, v := range task.Data.EnvMap {
 		c.Env = append(c.Env, fmt.Sprintf("%s=%s", k, v))
