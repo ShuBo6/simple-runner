@@ -1,6 +1,6 @@
 etcd:
   endpoints:
-    - "http://192.168.2.15:2379"
+    - "http://192.168.123.4:2379"
   username:
   password:
   root_path: "/simple-cicd/"

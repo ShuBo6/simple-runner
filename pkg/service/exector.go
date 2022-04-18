@@ -11,7 +11,7 @@ import (
 )
 
 func Exec(task *model.Task) {
-	log.Infof("[executor] task: %s starting.")
+	log.Infof("[executor] task: %+v starting.",*task)
 	c := exec.Command("/bin/sh", "-c", "-e", task.Data.Cmd)
 	//c := exec.Command( task.Data.Cmd)
 	c.Env = os.Environ()
