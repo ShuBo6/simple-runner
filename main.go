@@ -1,18 +1,16 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"fmt"
 	"github.com/prometheus/common/log"
 	"github.com/sirupsen/logrus"
 	"os"
-	"os/signal"
 	"simple-cicd/client"
 	"simple-cicd/config"
 	"simple-cicd/pkg/queue"
 	"simple-cicd/pkg/service"
 	"simple-cicd/router"
 	"sync"
-	"syscall"
 )
 
 func main() {
@@ -28,21 +26,27 @@ func main() {
 		log.Errorf("InitEtcdQueue failed.err:%s", err.Error())
 		return
 	}
-	gin.SetMode(gin.DebugMode)
 	logrus.SetLevel(logrus.TraceLevel)
 	logrus.SetOutput(os.Stdout)
 	logrus.SetFormatter(&logrus.JSONFormatter{})
-	//router.Init()
+	queue.InitChannelQueue()
 	wg := &sync.WaitGroup{}
-	service.EtcdHandler(wg)
-	service.Run(wg)
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		log.Infof("[Run] start Run worker")
+		fmt.Println("[Run] start Run worker")
+		for {
+			select {
+			case task, ok := <-queue.ChannelTaskQueue:
+				if ok {
+					go service.Exec(task)
+				}
+
+			}
+		}
+	}()
 	router.Init()
 	wg.Wait()
-	go processSignal()
-}
-func processSignal() {
-	signalChan := make(chan os.Signal, 1)
-	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGTSTP)
-	sn := <-signalChan
-	logrus.Infof("exit server because signal %d", sn)
+
 }

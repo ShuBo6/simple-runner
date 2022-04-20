@@ -11,5 +11,6 @@ func Init() {
 	defaultRouter = gin.Default()
 	defaultRouter.GET("/test", controller.Test)
 	defaultRouter.POST("/task", controller.CreateTask)
+
 	defaultRouter.Run("0.0.0.0:5080")
 }

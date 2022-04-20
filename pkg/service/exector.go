@@ -11,8 +11,8 @@ import (
 )
 
 func Exec(task *model.Task) {
-	log.Infof("[executor] task: %+v starting.",*task)
-	c := exec.Command("/bin/sh", "-c", "-e", task.Data.Cmd)
+	log.Infof("[executor] task: %+v starting.", *task)
+	c := exec.Command("/bin/sh", "-c", "-xe", task.Data.Cmd)
 	//c := exec.Command( task.Data.Cmd)
 	c.Env = os.Environ()
 	for k, v := range task.Data.EnvMap {
@@ -24,7 +24,7 @@ func Exec(task *model.Task) {
 		log.Errorf("[Exec] err:%+v", err.Error())
 		task.Data.Stdout = err.Error()
 		task.Status = 3
-	}else {
+	} else {
 		log.Infof(string(output))
 		task.Data.Stdout = string(output)
 		task.Status = 2
@@ -34,5 +34,5 @@ func Exec(task *model.Task) {
 		log.Errorf("[EtcdHandler] save StartTaskQueue failed,err:%+v", err)
 		return
 	}
-	log.Infof("[executor] task: %s finished.",task.Name)
+	log.Infof("[executor] task: %s finished.", task.Name)
 }
