@@ -19,13 +19,13 @@ func CreateTask(ctx *gin.Context) *response.Response {
 	var req request.TaskRequest
 	err = ctx.ShouldBind(&req)
 	if err != nil {
-		return &response.Response{Code: response.ERROR, Error: err}
+		return &response.Response{Code: response.ERROR, Message: err.Error()}
 	}
 	envMap := make(map[string]string)
 	if req.Env != "" {
 		err = json.Unmarshal([]byte(req.Env), envMap)
 		if err != nil {
-			return &response.Response{Code: response.ERROR, Error: err}
+			return &response.Response{Code: response.ERROR, Message: err.Error()}
 		}
 	}
 	task := &model.Task{
@@ -36,19 +36,14 @@ func CreateTask(ctx *gin.Context) *response.Response {
 		EnvMap: envMap,
 	}
 	if err != nil {
-		return &response.Response{Code: response.ERROR, Error: err}
-	}
-	err = json.Unmarshal(v, task)
-	if err != nil {
-		return &response.Response{Code: response.ERROR, Error: err}
+		return &response.Response{Code: response.ERROR, Message: err.Error()}
 	}
 	global.ChannelTaskQueue <- task
 	return &response.Response{Code: response.SUCCESS, Data: v, Message: msg}
 }
 func ListTask(ctx *gin.Context) *response.Response {
-	ret, err := json.Marshal(global.ChannelTaskQueue)
-	if err != nil {
-		return &response.Response{Code: response.ERROR, Error: err}
-	}
-	return &response.Response{Code: response.SUCCESS, Data: string(ret)}
+	//todo channel内的数据如何更好的展现
+	//global.ChannelTaskQueue
+
+	return &response.Response{Code: response.SUCCESS, Data: "任务队列待续。。"}
 }

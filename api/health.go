@@ -5,6 +5,6 @@ import (
 	"net/http"
 )
 
-func Test(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, "")
+func Health(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, "ok")
 }

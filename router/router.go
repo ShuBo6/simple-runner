@@ -10,7 +10,7 @@ var defaultRouter *gin.Engine
 var handler=response.Handler{}
 func Init() {
 	defaultRouter = gin.Default()
-	defaultRouter.GET("/test", api.Test)
+	defaultRouter.GET("/health", api.Health)
 	defaultRouter.POST("/task", handler.Handler()(api.CreateTask))
 	defaultRouter.GET("/task", handler.Handler()(api.ListTask))
 
