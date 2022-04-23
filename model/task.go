@@ -16,12 +16,11 @@ const (
 )
 
 type Task struct {
-	Id     string            `json:"id"`
-	Cmd    string            `json:"cmd"`
-	EnvMap map[string]string `json:"env_map"`
-
-	Name string   `json:"name"`
-	Type TaskType `yaml:"type" json:"type"`
+	Id     string            `mapstructure:"id" json:"id"`
+	Cmd    string            `mapstructure:"cmd" json:"cmd"`
+	EnvMap map[string]string `mapstructure:"env_map" json:"env_map"`
+	Name   string            `mapstructure:"name" json:"name"`
+	Type   TaskType          `mapstructure:"type" json:"type" yaml:"type" `
 	//Status int      `json:"status"`
 }
 type TaskData struct {

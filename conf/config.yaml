@@ -17,5 +17,7 @@ etcd:
     - "http://192.168.123.4:2379"
   username: ""
   password: ""
-  root_path: "/simple-cicd/"
+  root_path: "/runner"
+  task_path: "/runner/task_path"
+  history_task_path: "/runner/history_task_path"
 

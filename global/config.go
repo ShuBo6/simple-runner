@@ -12,10 +12,12 @@ type System struct {
 }
 
 type EtcdConfig struct {
-	Endpoints []string `mapstructure:"endpoints" yaml:"endpoints"`
-	Username  string   `mapstructure:"username" yaml:"username"`
-	Password  string   `mapstructure:"password" yaml:"password"`
-	RootPath  string   `mapstructure:"root_path" yaml:"root_path"`
+	Endpoints       []string `mapstructure:"endpoints" yaml:"endpoints"`
+	Username        string   `mapstructure:"username" yaml:"username"`
+	Password        string   `mapstructure:"password" yaml:"password"`
+	RootPath        string   `mapstructure:"root_path" yaml:"root_path"`
+	TaskPath        string   `mapstructure:"task_path" yaml:"task_path"`
+	HistoryTaskPath string   `mapstructure:"history_task_path" yaml:"history_task_path"`
 }
 type Zap struct {
 	Level         string `mapstructure:"level" json:"level" yaml:"level"`
@@ -28,4 +30,3 @@ type Zap struct {
 	StacktraceKey string `mapstructure:"stacktrace-key" json:"stacktraceKey" yaml:"stacktrace-key"`
 	LogInConsole  bool   `mapstructure:"log-in-console" json:"logInConsole" yaml:"log-in-console"`
 }
-

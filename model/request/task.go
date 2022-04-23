@@ -6,3 +6,7 @@ type TaskRequest struct {
 	Cmd  string `json:"cmd"  binding:"required"`
 	Env  string `json:"env"`
 }
+
+type ListTaskRequest struct {
+	Scope int `json:"scope"` // 0 查所有，1查未开始，2查历史
+}

@@ -2,14 +2,23 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"simple-cicd/global"
 	"simple-cicd/initial"
+	"simple-cicd/model"
 	"testing"
 	"time"
 )
+
+func TestName(t *testing.T) {
+	ret := make([]model.Task, 3)
+	b,_:=json.Marshal(ret)
+	fmt.Println(string(b))
+[{"id":"3959a9f8-faa1-4861-a695-b9f153b5ca7f","cmd":"go version","env_map":{},"name":"test12","type":"shell"}{"id":"90c3e7ca-812c-47bb-86aa-7ae8edd981c5","cmd":"go version","env_map":{},"name":"test12","type":"shell"}{"id":"a42fb315-c0dd-488b-a9d0-a2ea256b4cbc","cmd":"go version","env_map":{},"name":"test12","type":"shell"}]
+}
 
 func TestWatch(t *testing.T) {
 
