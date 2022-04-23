@@ -58,8 +58,8 @@ func GitClone(gitUrl, gitRef string) (string,error) {
 	return baseShellExec(cmd,nil)
 }
 func DockerBuild(tag, path string) (string,error) {
-	cmd := strings.ReplaceAll(GitCloneTemplate, "{{tag}}", tag)
-	cmd = strings.ReplaceAll(GitCloneTemplate, "{{dockerfile}}", path)
+	cmd := strings.ReplaceAll(DockerBuildTemplate, "{{tag}}", tag)
+	cmd = strings.ReplaceAll(DockerBuildTemplate, "{{dockerfile}}", path)
 	return baseShellExec(cmd,nil)
 }
 
