@@ -7,7 +7,7 @@ import (
 	"github.com/prometheus/common/log"
 	"github.com/sirupsen/logrus"
 	"simple-cicd/client"
-	"simple-cicd/config"
+	"simple-cicd/global"
 	"simple-cicd/queue"
 	"simple-cicd/router"
 	"testing"
@@ -16,7 +16,7 @@ import (
 func TestName(t *testing.T) {
 
 	client.Init()
-	err := config.Load("conf/config.yaml")
+	err := global.Load("conf/config.yaml")
 	if err != nil {
 		log.Error("load config path(conf/config.yaml) failed.")
 		return

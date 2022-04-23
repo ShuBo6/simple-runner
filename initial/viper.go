@@ -1,14 +1,21 @@
 package initial
 
 import (
-	"github.com/prometheus/common/log"
-	"simple-cicd/config"
+	"fmt"
+	"github.com/spf13/viper"
+	"go.uber.org/zap"
+	"simple-cicd/global"
 )
 
 func InitViper() {
-	err := config.Load("conf/config.yaml")
+	_v := viper.New()
+	_v.SetConfigFile("conf/config.yaml")
+	if err := _v.ReadInConfig(); err != nil {
+		panic(fmt.Sprintf(`读取config.yaml文件失败, err: %v`, err))
+	}
+	err := _v.Unmarshal(&global.C)
+	zap.L().Info("global",zap.Any("",global.C))
 	if err != nil {
-		log.Error("load config path(conf/config.yaml) failed.")
-		return
+		panic(fmt.Sprintf(`读取config.yaml文件失败, err: %v`, err))
 	}
 }

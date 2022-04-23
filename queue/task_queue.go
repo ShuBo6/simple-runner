@@ -9,7 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"simple-cicd/client"
-	"simple-cicd/config"
+	"simple-cicd/global"
 	"simple-cicd/model"
 	"sync"
 )
@@ -49,7 +49,7 @@ func NewQueue(key string) (*TaskQueue, error) {
 		return nil, err
 	}
 	queue := &TaskQueue{
-		RootPath: fmt.Sprintf("%s%s/", config.C.EtcdConfig.RootPath, key),
+		RootPath: fmt.Sprintf("%s%s/", global.C.EtcdConfig.RootPath, key),
 		cli:      cli,
 		locker:   &sync.Mutex{},
 	}
