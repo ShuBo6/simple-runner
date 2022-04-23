@@ -14,7 +14,7 @@ system:
   port: "5080"
 etcd:
   endpoints:
-    - "http://192.168.123.4:2379"
+    - "http://192.168.123.3:2379"
   username: ""
   password: ""
   root_path: "/simple-cicd/"

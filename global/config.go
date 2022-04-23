@@ -29,15 +29,3 @@ type Zap struct {
 	LogInConsole  bool   `mapstructure:"log-in-console" json:"logInConsole" yaml:"log-in-console"`
 }
 
-//func Load(configPath string) error {
-//	abs, _ := filepath.Abs(configPath)
-//	log.Infof("load config from config file %s", abs)
-//	data, err := ioutil.ReadFile(configPath)
-//	if err != nil {
-//		return err
-//	}
-//	if err = yaml.Unmarshal(data, C); err != nil {
-//		return err
-//	}
-//	return nil
-//}
