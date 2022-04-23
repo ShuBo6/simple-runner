@@ -4,3 +4,8 @@ etcd:
   username:
   password:
   root_path: "/simple-cicd/"
+
+
+
+system:
+  port: "5080"

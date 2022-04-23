@@ -2,15 +2,17 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"simple-cicd/controller"
+	"simple-cicd/api"
+	"simple-cicd/model/response"
 )
 
 var defaultRouter *gin.Engine
-
+var handler=response.Handler{}
 func Init() {
 	defaultRouter = gin.Default()
-	defaultRouter.GET("/test", controller.Test)
-	defaultRouter.POST("/task", controller.CreateTask)
+	defaultRouter.GET("/test", api.Test)
+	defaultRouter.POST("/task", handler.Handler()(api.CreateTask))
+	defaultRouter.GET("/task", handler.Handler()(api.ListTask))
 
 	defaultRouter.Run("0.0.0.0:5080")
 }

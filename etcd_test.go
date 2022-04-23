@@ -8,7 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"simple-cicd/client"
 	"simple-cicd/config"
-	"simple-cicd/pkg/queue"
+	"simple-cicd/queue"
 	"simple-cicd/router"
 	"testing"
 )

@@ -3,7 +3,7 @@ package client
 import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"simple-cicd/config"
-	"simple-cicd/pkg/model"
+	"simple-cicd/model"
 	"time"
 )
 
