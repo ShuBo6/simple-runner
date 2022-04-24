@@ -19,7 +19,7 @@ var (
 
 type Etcd struct{}
 
-func (q *Etcd) Add(task *model.Task) error {
+func (q *Etcd) Add(path string, task *model.Task) error {
 	var (
 		lock sync.Mutex
 		kv   clientv3.KV
@@ -30,7 +30,7 @@ func (q *Etcd) Add(task *model.Task) error {
 		zap.L().Error("Etcd.Add Marshal error", zap.String(task.Name, err.Error()))
 		return err
 	}
-	key := fmt.Sprintf("%s/%s", C.EtcdConfig.TaskPath, task.Id)
+	key := fmt.Sprintf("%s/%s", path, task.Id)
 	zap.L().Info("[Add Task into queue] ", zap.String("key", key), zap.String("value", string(data)))
 
 	defer lock.Unlock()
@@ -77,7 +77,7 @@ func (q *Etcd) Get(path string) ([]model.Task, error) {
 	for i, _ := range resp.Kvs {
 		task := model.Task{}
 		err = json.Unmarshal(resp.Kvs[i].Value, &task)
-		if err!=nil {
+		if err != nil {
 			zap.L().Error(path+" :kv.Get Unmarshal err ", zap.Error(err))
 		}
 		ret = append(ret, task)
@@ -94,6 +94,7 @@ func (q *Etcd) Watch(path string, ctx context.Context, cancelFunc context.Cancel
 		watchStartRevision int64
 		kv                 clientv3.KV
 	)
+	kv = clientv3.NewKV(EtcdCli)
 	// 先GET到当前的值，并监听后续变化
 	if getResp, err = kv.Get(context.TODO(), path, clientv3.WithPrefix()); err != nil {
 		zap.L().Error(path+" : kv.Get err ", zap.Error(err))
@@ -115,7 +116,12 @@ func (q *Etcd) Watch(path string, ctx context.Context, cancelFunc context.Cancel
 			switch event.Type {
 			case mvccpb.PUT:
 				zap.L().Info(path+"监听到put", zap.String("值为", string(event.Kv.Value)), zap.Int64("lastCreateRevision:", event.Kv.CreateRevision), zap.Int64("lastModRevision:", event.Kv.ModRevision))
-
+				task := model.Task{}
+				err = json.Unmarshal(event.Kv.Value, &task)
+				if err != nil {
+					zap.L().Error(path+" :kv.Get Unmarshal err ", zap.Error(err))
+				}
+				ChannelTaskQueue <- &task
 			case mvccpb.DELETE:
 				fmt.Println("删除了", "Revision:", event.Kv.ModRevision)
 			}

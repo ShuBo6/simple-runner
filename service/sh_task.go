@@ -31,7 +31,7 @@ func checkCmd(cmd ...string) bool {
 	}
 	return true
 }
-func baseShellExec(cmd string, env map[string]string,args ...string) (string, error) {
+func baseShellExec(cmd string, env map[string]string, args ...string) (string, error) {
 	zap.L().Info("baseShellExec", zap.String("cmd:", cmd))
 	if !checkCmd(cmd) {
 		return "", errors.New(fmt.Sprintf("cmd[%s] not found ", cmd))
@@ -49,17 +49,19 @@ func baseShellExec(cmd string, env map[string]string,args ...string) (string, er
 	zap.L().Info("baseShellExec", zap.String("cmd output", string(output)))
 	return string(output), nil
 }
-func GoVersion() (string,error) {
-	return baseShellExec("go version",nil)
+func ExecShell(cmd string, env map[string]string, args ...string) (string, error) {
+	return baseShellExec(cmd, env, args...)
 }
-func GitClone(gitUrl, gitRef string) (string,error) {
+func GoVersion() (string, error) {
+	return baseShellExec("go version", nil)
+}
+func GitClone(gitUrl, gitRef string) (string, error) {
 	cmd := strings.ReplaceAll(GitCloneTemplate, "{{git_url}}", gitUrl)
 	cmd = strings.ReplaceAll(GitCloneTemplate, "{{git_ref}}", gitRef)
-	return baseShellExec(cmd,nil)
+	return baseShellExec(cmd, nil)
 }
-func DockerBuild(tag, path string) (string,error) {
+func DockerBuild(tag, path string) (string, error) {
 	cmd := strings.ReplaceAll(DockerBuildTemplate, "{{tag}}", tag)
 	cmd = strings.ReplaceAll(DockerBuildTemplate, "{{dockerfile}}", path)
-	return baseShellExec(cmd,nil)
+	return baseShellExec(cmd, nil)
 }
-

@@ -38,7 +38,7 @@ func CreateTask(ctx *gin.Context) *response.Response {
 	if err != nil {
 		return &response.Response{Code: response.ERROR, Message: err.Error()}
 	}
-	err = global.EtcdCliAlias.Add(task)
+	err = global.EtcdCliAlias.Add(global.C.EtcdConfig.TaskPath, task)
 	if err != nil {
 		return &response.Response{Code: response.ERROR, Message: err.Error()}
 	}

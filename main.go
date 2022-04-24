@@ -7,5 +7,6 @@ import (
 func main() {
 
 	initial.Init()
+	initial.InitService()
 
 }

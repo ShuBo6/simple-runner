@@ -1,12 +1,19 @@
 package initial
 
-import "simple-cicd/router"
+import (
+	"simple-cicd/client"
+	"simple-cicd/router"
+)
 
 func Init() {
-	InitChannelQueue()
 	InitViper()
 	Zap.InitZap()
 	InitEtcd()
+	InitChannelQueue()
 	InitRouter()
+
+}
+func InitService() {
+	client.TaskQueue.InitTaskHandler()
 	router.RegisterRouter()
 }
