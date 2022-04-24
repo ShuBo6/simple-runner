@@ -2,3 +2,4 @@
 [runner]2022/04/24 - 10:22:45.787	[31merror[0m	/media/wangshubo/nvme/workplace/simple-runner/global/etcd.go:74	/runner/history_task_path :kv.Get err 	{"error": "/runner/history_task_path:len(ret.Kvs) == 0"}
 [runner]2022/04/24 - 10:22:55.879	[34minfo[0m	/media/wangshubo/nvme/workplace/simple-runner/global/etcd.go:34	[Add Task into queue] 	{"key": "/runner/task_path/4d6cf0ba-34c5-4275-8271-5055a3f4420a", "value": "{\"id\":\"4d6cf0ba-34c5-4275-8271-5055a3f4420a\",\"cmd\":\"go version\",\"env_map\":{},\"name\":\"test13\",\"type\":\"shell\"}"}
 [runner]2022/04/24 - 10:23:08.375	[31merror[0m	/media/wangshubo/nvme/workplace/simple-runner/global/etcd.go:74	/runner/history_task_path :kv.Get err 	{"error": "/runner/history_task_path:len(ret.Kvs) == 0"}
+[runner]2022/04/24 - 23:28:48.550	[34minfo[0m	/Users/wangshubo/workplace/simple-runner/client/task_queue.go:52	[TaskHandler] start
