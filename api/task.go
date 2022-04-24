@@ -45,8 +45,6 @@ func CreateTask(ctx *gin.Context) *response.Response {
 	return &response.Response{Code: response.SUCCESS, Data: v, Message: msg}
 }
 func ListTask(ctx *gin.Context) *response.Response {
-	//todo channel内的数据如何更好的展现
-	//global.ChannelTaskQueue
 	var (
 		err error
 		ret []model.Task
