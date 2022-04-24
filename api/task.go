@@ -8,6 +8,7 @@ import (
 	"simple-cicd/model"
 	"simple-cicd/model/request"
 	"simple-cicd/model/response"
+	"time"
 )
 
 func CreateTask(ctx *gin.Context) *response.Response {
@@ -29,11 +30,14 @@ func CreateTask(ctx *gin.Context) *response.Response {
 		}
 	}
 	task := &model.Task{
-		Id:     uuid.New().String(),
-		Name:   req.Name,
-		Type:   model.TaskType(req.Type),
-		Cmd:    req.Cmd,
-		EnvMap: envMap,
+		Id:         uuid.New().String(),
+		Name:       req.Name,
+		Type:       model.TaskType(req.Type),
+		Cmd:        req.Cmd,
+		Args:       req.Args,
+		EnvMap:     envMap,
+		CreateTime: time.Now(),
+		Status:     global.Ready,
 	}
 	if err != nil {
 		return &response.Response{Code: response.ERROR, Message: err.Error()}

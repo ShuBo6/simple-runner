@@ -6,9 +6,6 @@ import (
 	"simple-cicd/router"
 )
 
-
-
-
 func InitRouter() {
 	global.DefaultRouter = gin.Default()
 	global.DefaultRouter.Use(router.ZapLogger())

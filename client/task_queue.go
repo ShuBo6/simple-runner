@@ -5,6 +5,8 @@ import (
 	"go.uber.org/zap"
 	"simple-cicd/global"
 	"simple-cicd/service"
+	"strings"
+	"time"
 )
 
 var TaskQueue *TaskQ
@@ -37,7 +39,7 @@ func (t *TaskQ) Close() {
 
 }
 func (t *TaskQ) InitTaskHandler() {
-	defer close(global.ChannelTaskQueue)
+	//defer close(global.ChannelTaskQueue)
 
 	go func() {
 		global.EtcdCliAlias.Watch(global.C.EtcdConfig.TaskPath, t.Context1, t.CancelFunc1)
@@ -57,17 +59,34 @@ func (t *TaskQ) InitTaskHandler() {
 					//zap.L().Info("[TaskHandler] global.ChannelTaskQueue close")
 				} else if task != nil {
 					go func() {
+						task.UpdateTime = time.Now()
 						task.Status = global.Running
+						_ = global.EtcdCliAlias.Add(global.C.EtcdConfig.HistoryTaskPath, task)
 						// 将任务执行的stdout信息保存到history，然后删除这个task
-						out, err := service.ExecShell(task.Cmd, task.EnvMap)
+						args := strings.Split(task.Args, ",")
+						out, err := service.ExecShell(task.Cmd, task.EnvMap, args...)
 						if err != nil {
 							zap.L().Error("[TaskHandler] ExecShell error", zap.Error(err))
 							task.TaskData.StdErr = out
+							task.TaskData.Error = err.Error()
 							task.Status = global.Failed
 						} else {
 							task.TaskData.Stdout = out
 							task.Status = global.Finished
 						}
+						go func() {
+							task.DeleteTime = time.Now()
+							err = global.EtcdCliAlias.Delete(task.Id)
+							if err != nil {
+								zap.L().Error("[TaskHandler] Delete error", zap.Error(err))
+							}
+						}()
+						go func() {
+							err = global.EtcdCliAlias.Add(global.C.EtcdConfig.HistoryTaskPath, task)
+							if err != nil {
+								zap.L().Error("[TaskHandler] Add to history error", zap.Error(err))
+							}
+						}()
 					}()
 				}
 

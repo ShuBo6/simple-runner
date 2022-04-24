@@ -18,7 +18,7 @@ const (
 
 type Response struct {
 	Code        int         `json:"code"`
-	MessageCode int        `json:"-"`
+	MessageCode int         `json:"-"`
 	Data        interface{} `json:"data"`
 	Error       error       `json:"-"`
 	Err         string      `json:"err,omitempty"`

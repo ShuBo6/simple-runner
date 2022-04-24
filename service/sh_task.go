@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"go.uber.org/zap"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -37,7 +38,8 @@ func baseShellExec(cmd string, env map[string]string, args ...string) (string, e
 		return "", errors.New(fmt.Sprintf("cmd[%s] not found ", cmd))
 	}
 	c := exec.Command(cmd, args...)
-	c.Path = "/tmp"
+	path, _ := os.Getwd()
+	c.Path = path + "/runner"
 	for k, v := range env {
 		c.Env = append(c.Env, fmt.Sprintf("%s=%s", k, v))
 	}

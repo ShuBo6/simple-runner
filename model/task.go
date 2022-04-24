@@ -1,17 +1,8 @@
 package model
 
-
 import (
-
+	"time"
 )
-
-const (
-	Ready    = 0
-	Running  = 1
-	Finished = 2
-	Failed   = 3
-)
-
 
 type TaskType string
 
@@ -22,15 +13,20 @@ const (
 )
 
 type Task struct {
-	Id       string            `mapstructure:"id" json:"id"`
-	Cmd      string            `mapstructure:"cmd" json:"cmd"`
-	EnvMap   map[string]string `mapstructure:"env_map" json:"env_map,omitempty"`
-	Name     string            `mapstructure:"name" json:"name"`
-	Type     TaskType          `mapstructure:"type" json:"type" yaml:"type" `
-	Status   int               `mapstructure:"status" json:"status"`
-	TaskData *TaskData         `mapstructure:"task_data" json:"task_data,omitempty" `
+	CreateTime time.Time         `json:"create_time"`
+	UpdateTime time.Time         `json:"update_time"`
+	DeleteTime time.Time         `json:"delete_time"`
+	Id         string            `mapstructure:"id" json:"id"`
+	Cmd        string            `mapstructure:"cmd" json:"cmd"`
+	Args       string            `mapstructure:"args" json:"args"`
+	EnvMap     map[string]string `mapstructure:"env_map" json:"env_map,omitempty"`
+	Name       string            `mapstructure:"name" json:"name"`
+	Type       TaskType          `mapstructure:"type" json:"type" yaml:"type" `
+	Status     int               `mapstructure:"status" json:"status"`
+	TaskData   TaskData          `mapstructure:"task_data" json:"task_data,omitempty" `
 }
 type TaskData struct {
-	StdErr string `json:"stdErr"`
-	Stdout string `json:"stdout"`
+	StdErr string `json:"stdErr,omitempty"`
+	Stdout string `json:"stdout,omitempty"`
+	Error  string `json:"error,omitempty"`
 }

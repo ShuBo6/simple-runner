@@ -49,7 +49,7 @@ func (q *Etcd) Delete(taskId string) error {
 	)
 	kv = clientv3.NewKV(EtcdCli)
 	key := fmt.Sprintf("%s/%s", C.EtcdConfig.TaskPath, taskId)
-	zap.L().Info("[Add Task into queue] ", zap.String("key", key))
+	zap.L().Info("[Delete Task] ", zap.String("key", key))
 	defer lock.Unlock()
 	lock.Lock()
 	_, err = kv.Delete(context.TODO(), key)
@@ -89,27 +89,27 @@ func (q *Etcd) Get(path string) ([]model.Task, error) {
 // Watch 使用cancelFunc控制监听器的退出,这里ctx感知到cancel则会关闭watcher
 func (q *Etcd) Watch(path string, ctx context.Context, cancelFunc context.CancelFunc) {
 	var (
-		err                error
-		getResp            *clientv3.GetResponse
-		watchStartRevision int64
-		kv                 clientv3.KV
+		err error
+		//getResp            *clientv3.GetResponse
+		//watchStartRevision int64
+		//kv                 clientv3.KV
 	)
-	kv = clientv3.NewKV(EtcdCli)
+	//kv = clientv3.NewKV(EtcdCli)
 	// 先GET到当前的值，并监听后续变化
-	if getResp, err = kv.Get(context.TODO(), path, clientv3.WithPrefix()); err != nil {
-		zap.L().Error(path+" : kv.Get err ", zap.Error(err))
-		return
-	}
+	//if getResp, err = kv.Get(context.TODO(), path, clientv3.WithPrefix()); err != nil {
+	//	zap.L().Error(path+" : kv.Get err ", zap.Error(err))
+	//	return
+	//}
 	// 现在key是存在的
-	if len(getResp.Kvs) != 0 {
-		zap.L().Info(path+" :当前值:", zap.Any("", getResp.Kvs[0].Value))
-	}
+	//if len(getResp.Kvs) != 0 {
+	//	zap.L().Info(path+" :当前值:", zap.Any("", string(getResp.Kvs[0].Value)))
+	//}
 	// 当前etcd集群事务ID, 单调递增的（监听path后续的变化,也就是通过监听版本变化）
-	watchStartRevision = getResp.Header.Revision + 1
+	//watchStartRevision = getResp.Header.Revision + 1
 	// 创建一个watcher(监听器)
 	watcher := clientv3.NewWatcher(EtcdCli)
 	// 启动监听,Watch返回一个channel
-	watchRespChan := watcher.Watch(ctx, path, clientv3.WithRev(watchStartRevision))
+	watchRespChan := watcher.Watch(ctx, path, clientv3.WithPrefix())
 	//消费channel,for 遍历chan等价于 <-chan
 	for watchResp := range watchRespChan {
 		for _, event := range watchResp.Events {
@@ -121,7 +121,10 @@ func (q *Etcd) Watch(path string, ctx context.Context, cancelFunc context.Cancel
 				if err != nil {
 					zap.L().Error(path+" :kv.Get Unmarshal err ", zap.Error(err))
 				}
-				ChannelTaskQueue <- &task
+				if task.Status == Ready {
+					ChannelTaskQueue <- &task
+				}
+
 			case mvccpb.DELETE:
 				fmt.Println("删除了", "Revision:", event.Kv.ModRevision)
 			}
