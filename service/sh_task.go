@@ -53,16 +53,16 @@ func baseShellExec(cmd string, env map[string]string, args ...string) (string, e
 func ExecShell(cmd string, env map[string]string, args ...string) (string, error) {
 	return baseShellExec(cmd, env, args...)
 }
-func GoVersion() (string, error) {
-	return baseShellExec("go version", nil)
-}
-func GitClone(gitUrl, gitRef string) (string, error) {
+func GitClone(gitUrl, gitRef string, env map[string]string) (string, error) {
 	cmd := strings.ReplaceAll(GitCloneTemplate, "{{git_url}}", gitUrl)
 	cmd = strings.ReplaceAll(GitCloneTemplate, "{{git_ref}}", gitRef)
-	return baseShellExec(cmd, nil)
+	return baseShellExec("/bin/sh", env, "-xe", cmd)
 }
-func DockerBuild(tag, path string) (string, error) {
+func DockerBuild(tag, path string, env map[string]string) (string, error) {
 	cmd := strings.ReplaceAll(DockerBuildTemplate, "{{tag}}", tag)
 	cmd = strings.ReplaceAll(DockerBuildTemplate, "{{dockerfile}}", path)
-	return baseShellExec(cmd, nil)
+	return baseShellExec("/bin/sh", env, "-xe", cmd)
+}
+func GoVersion() (string, error) {
+	return baseShellExec("go", nil, "version")
 }

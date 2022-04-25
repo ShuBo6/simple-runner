@@ -13,32 +13,58 @@ import (
 
 func CreateTask(ctx *gin.Context) *response.Response {
 	var (
-		err error
-		v   []byte
-		msg string = "CreateTask success"
+		err     error
+		v       []byte
+		msg     string = "CreateTask success"
+		envMap         = make(map[string]string)
+		task           = &model.Task{}
+		marshal []byte
 	)
 	var req request.TaskRequest
 	err = ctx.ShouldBind(&req)
 	if err != nil {
-		return &response.Response{Code: response.ERROR, Message: err.Error()}
+		return &response.Response{Code: response.ERROR, Message: "type 不能为空"}
 	}
-	envMap := make(map[string]string)
 	if req.Env != "" {
 		err = json.Unmarshal([]byte(req.Env), &envMap)
 		if err != nil {
 			return &response.Response{Code: response.ERROR, Message: err.Error()}
 		}
 	}
-	task := &model.Task{
+	task.BaseTask = model.BaseTask{
 		Id:         uuid.New().String(),
 		Name:       req.Name,
-		Type:       model.TaskType(req.Type),
-		Cmd:        req.Cmd,
+		Type:       global.ShellTask,
 		Args:       req.Args,
 		EnvMap:     envMap,
 		CreateTime: time.Now(),
 		Status:     global.Ready,
 	}
+	switch req.Type {
+	case global.ShellTask:
+		if req.ShellBuild == nil {
+			return &response.Response{Code: response.ERROR, Message: "ShellBuild 不能为空"}
+		}
+		marshal, err = json.Marshal(req.ShellBuild)
+		if err != nil {
+			return &response.Response{Code: response.ERROR, Message: err.Error()}
+		}
+
+	case global.DockerTask:
+		if req.DockerBuild == nil {
+			return &response.Response{Code: response.ERROR, Message: "DockerBuild 不能为空"}
+		}
+		marshal, err = json.Marshal(req.DockerBuild)
+		if err != nil {
+			return &response.Response{Code: response.ERROR, Message: err.Error()}
+		}
+		//todo PipelineTask
+	case global.PipelineTask:
+		return &response.Response{Code: response.ERROR, Message: "PipelineTask 暂时不支持"}
+	default:
+		return &response.Response{Code: response.ERROR, Message: "未知的类型"}
+	}
+	task.TaskMetaData = string(marshal)
 	if err != nil {
 		return &response.Response{Code: response.ERROR, Message: err.Error()}
 	}
