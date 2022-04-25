@@ -14,8 +14,8 @@ system:
   port: "5080"
 etcd:
   endpoints:
-    #    - "http://192.168.123.4:2379"
-    - "http://127.0.0.1:2379"
+        - "http://192.168.123.4:2379"
+#    - "http://127.0.0.1:2379"
   username: ""
   password: ""
   root_path: "/runner"

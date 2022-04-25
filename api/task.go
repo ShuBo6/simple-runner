@@ -34,7 +34,7 @@ func CreateTask(ctx *gin.Context) *response.Response {
 	task.BaseTask = model.BaseTask{
 		Id:         uuid.New().String(),
 		Name:       req.Name,
-		Type:       global.ShellTask,
+		Type:       model.TaskType(req.Type),
 		Args:       req.Args,
 		EnvMap:     envMap,
 		CreateTime: time.Now(),

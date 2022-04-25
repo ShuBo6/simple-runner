@@ -106,8 +106,11 @@ func processTask(task *model.Task) {
 		}
 		out, err = service.GitClone(metaData.GitUrl, metaData.GitRef, task.EnvMap)
 		if err == nil {
-			out, err = service.DockerBuild(fmt.Sprintf("%s:%s", metaData.ImageName, metaData.Tag),
-				metaData.Path, task.EnvMap)
+			str := service.SplitUrl(metaData.GitUrl)
+			out1, err1 := service.DockerBuild(fmt.Sprintf("%s:%s", metaData.ImageName, metaData.Tag),
+				str[3], metaData.Path, task.EnvMap)
+			out += out1
+			err = err1
 		}
 
 	default:
