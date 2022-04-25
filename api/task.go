@@ -60,6 +60,7 @@ func CreateTask(ctx *gin.Context) *response.Response {
 		}
 		//todo PipelineTask
 	case global.PipelineTask:
+
 		return &response.Response{Code: response.ERROR, Message: "PipelineTask 暂时不支持"}
 	default:
 		return &response.Response{Code: response.ERROR, Message: "未知的类型"}

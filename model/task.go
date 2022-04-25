@@ -32,6 +32,14 @@ type DockerTaskMetaData struct {
 	Tag       string `json:"tag"`
 	ImageName string `json:"image_name"`
 }
+//todo
+type PipelineTaskMetaData struct {
+
+	Path      string `json:"path"`
+	GitUrl    string `json:"git_url"`
+	GitRef    string `json:"git_ref"`
+
+}
 type TaskData struct {
 	StdErr string `json:"stdErr,omitempty"`
 	Stdout string `json:"stdout,omitempty"`
