@@ -1,3 +1,5 @@
-/logs
+.idea/
+logs
 latest_log
-/runner/*
+runner/*
+conf/*
