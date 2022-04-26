@@ -9,6 +9,7 @@ import (
 	"simple-cicd/global"
 	"simple-cicd/model"
 	"simple-cicd/service"
+	"simple-cicd/utils"
 	"strings"
 	"time"
 )
@@ -112,7 +113,30 @@ func processTask(task *model.Task) {
 			out += out1
 			err = err1
 		}
-
+	case global.PipelineTask:
+		metaData := model.PipelineTaskMetaData{}
+		err = json.Unmarshal([]byte(task.TaskMetaData), &metaData)
+		if err != nil {
+			zap.L().Error("[processTask] json.Unmarshal failed")
+			return
+		}
+		if metaData.StartStag != nil {
+			emails := strings.Split(metaData.StartStag.ToEmail, ",")
+			err = utils.SendMail(emails, fmt.Sprintf("id:%s,name:%s,createTime:%d 执行开始。", task.Id, task.Name, task.CreateTime.String()), fmt.Sprintf("task:%+v", task))
+			if err != nil {
+				zap.L().Error("[processTask] SendMail failed", zap.Error(err), zap.Any("ToEmail", metaData.StartStag.ToEmail))
+				return
+			}
+		}
+		out, err = service.ExecShell(metaData.Cmd, task.EnvMap, args...)
+		if metaData.EndStag != nil {
+			emails := strings.Split(metaData.StartStag.ToEmail, ",")
+			err = utils.SendMail(emails, fmt.Sprintf("id:%s,name:%s,DeleteTime:%d 执行完成。", task.Id, task.Name, task.DeleteTime.String()), fmt.Sprintf("task:%+v", task))
+			if err != nil {
+				zap.L().Error("[processTask] SendMail failed", zap.Error(err), zap.Any("ToEmail", metaData.EndStag.ToEmail))
+				return
+			}
+		}
 	default:
 		zap.L().Error("[processTask] ExecShell error", zap.Error(errors.New(string("未知的类型"+task.Type))))
 		err = errors.New(string("未知的类型" + task.Type))

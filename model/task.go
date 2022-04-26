@@ -32,13 +32,23 @@ type DockerTaskMetaData struct {
 	Tag       string `json:"tag"`
 	ImageName string `json:"image_name"`
 }
-//todo
-type PipelineTaskMetaData struct {
 
+type PipelineTaskMetaData struct {
 	Path      string `json:"path"`
 	GitUrl    string `json:"git_url"`
 	GitRef    string `json:"git_ref"`
+	StartStag *Stag  `json:"start_stag"`
+	EndStag   *Stag  `json:"end_stag"`
+	Cmd       string `mapstructure:"cmd" json:"cmd"`
+}
 
+type Stag struct {
+	Notify
+}
+type Notify struct {
+	ToEmail string `json:"to_email"` //逗号分割
+	Title   string `json:"title"`
+	Body    string `json:"body"`
 }
 type TaskData struct {
 	StdErr string `json:"stdErr,omitempty"`

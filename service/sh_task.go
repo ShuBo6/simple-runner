@@ -76,6 +76,10 @@ func DockerBuild(tag, path, filepath string, env map[string]string) (string, err
 	cmd = strings.ReplaceAll(cmd, "{{dir}}", path)
 	return baseShellExec("/bin/bash", env, "-cxe", cmd)
 }
+//func Pipeline(start, end *model.Stag, cmd string, env map[string]string) (string, error) {
+//
+//	return
+//}
 
 func GoVersion() (string, error) {
 	return baseShellExec("go", nil, "version")

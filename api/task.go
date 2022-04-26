@@ -58,10 +58,16 @@ func CreateTask(ctx *gin.Context) *response.Response {
 		if err != nil {
 			return &response.Response{Code: response.ERROR, Message: err.Error()}
 		}
-		//todo PipelineTask
-	case global.PipelineTask:
 
-		return &response.Response{Code: response.ERROR, Message: "PipelineTask 暂时不支持"}
+	case global.PipelineTask:
+		if req.Pipeline == nil {
+			return &response.Response{Code: response.ERROR, Message: "Pipeline 不能为空"}
+		}
+		marshal, err = json.Marshal(req.Pipeline)
+		if err != nil {
+			return &response.Response{Code: response.ERROR, Message: err.Error()}
+		}
+
 	default:
 		return &response.Response{Code: response.ERROR, Message: "未知的类型"}
 	}
