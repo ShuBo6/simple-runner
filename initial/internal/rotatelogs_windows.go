@@ -1,9 +1,9 @@
 package internal
 
 import (
-	"aqgs/asr/global"
 	"os"
 	"path"
+	"simple-cicd/global"
 	"time"
 
 	logs "github.com/lestrrat-go/file-rotatelogs"
@@ -12,11 +12,11 @@ import (
 
 func GetWriteSyncer() (zapcore.WriteSyncer, error) {
 	fileWriter, err := logs.New(
-		path.Join(global.Config.Zap.Director, "%Y-%m-%d.log"),
+		path.Join(global.C.Zap.Director, "%Y-%m-%d.log"),
 		logs.WithMaxAge(7*24*time.Hour),
 		logs.WithRotationTime(24*time.Hour),
 	)
-	if global.Config.Zap.LogInConsole {
+	if global.C.Zap.LogInConsole {
 		return zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(fileWriter)), err
 	}
 	return zapcore.AddSync(fileWriter), err
